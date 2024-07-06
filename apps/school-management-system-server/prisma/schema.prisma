@@ -1,0 +1,56 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Student {
+  contactNumber String?
+  createdAt     DateTime  @default(now())
+  dateOfBirth   DateTime?
+  email         String?
+  fees          Fee[]
+  firstName     String?
+  id            String    @id @default(cuid())
+  lastName      String?
+  updatedAt     DateTime  @updatedAt
+}
+
+model ClassModel {
+  className String?
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  section   String?
+  teacher   Teacher? @relation(fields: [teacherId], references: [id])
+  teacherId String?
+  updatedAt DateTime @updatedAt
+}
+
+model Fee {
+  amount    Float?
+  createdAt DateTime       @default(now())
+  dueDate   DateTime?
+  id        String         @id @default(cuid())
+  status    EnumFeeStatus?
+  student   Student?       @relation(fields: [studentId], references: [id])
+  studentId String?
+  updatedAt DateTime       @updatedAt
+}
+
+model Teacher {
+  classes       ClassModel[]
+  contactNumber String?
+  createdAt     DateTime     @default(now())
+  email         String?
+  firstName     String?
+  id            String       @id @default(cuid())
+  lastName      String?
+  updatedAt     DateTime     @updatedAt
+}
+
+enum EnumFeeStatus {
+  Option1
+}
